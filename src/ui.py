@@ -227,22 +227,33 @@ def inject_custom_css():
     </style>
     """, unsafe_allow_html=True)
 
-def render_hero(logo_path=None):
+def render_hero(logo_path=None, on_primary_click=None, **kwargs):
     """
     Render main product hero section with official NutriGuide AI logo.
+    Supports flexible signature (logo_path, on_primary_click, **kwargs) to prevent TypeErrors.
     """
+    if logo_path is None:
+        logo_path = kwargs.get('logo_path')
+        
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if logo_path is None or not os.path.exists(logo_path):
+        default_logo = os.path.join(base_dir, 'assets', 'nutriguide_logo.png')
+        if os.path.exists(default_logo):
+            logo_path = default_logo
+
     if logo_path and os.path.exists(logo_path):
         col_logo, col_text = st.columns([1, 4])
         with col_logo:
-            st.image(logo_path, use_column_width=True)
+            st.image(logo_path, width=120)
         with col_text:
             st.markdown("""
-            <div class="hero-banner">
+            <div class="hero-banner" style="margin-bottom:0;">
                 <span class="hero-brand">NutriGuide AI</span>
                 <h1 class="hero-title">Personalized Nutrition, Powered by AI</h1>
                 <p class="hero-subtitle">Get diet suggestions tailored to your health profile, lifestyle, dietary restrictions and food preferences.</p>
             </div>
             """, unsafe_allow_html=True)
+        st.markdown("<br>", unsafe_allow_html=True)
     else:
         st.markdown("""
         <div class="hero-banner">
