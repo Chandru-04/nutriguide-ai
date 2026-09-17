@@ -1,4 +1,5 @@
 import streamlit as st
+import os
 
 def inject_custom_css():
     """
@@ -29,7 +30,7 @@ def inject_custom_css():
         .hero-banner {
             background: linear-gradient(135deg, #059669 0%, #0D9488 60%, #0284C7 100%);
             border-radius: 20px;
-            padding: 3rem 2.5rem;
+            padding: 2.5rem 2.5rem;
             color: #FFFFFF;
             box-shadow: 0 10px 25px -5px rgba(5, 150, 105, 0.2);
             margin-bottom: 2rem;
@@ -46,24 +47,24 @@ def inject_custom_css():
             padding: 0.3rem 0.85rem;
             border-radius: 9999px;
             display: inline-block;
-            margin-bottom: 1rem;
+            margin-bottom: 0.75rem;
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
         .hero-title {
-            font-size: 2.75rem;
+            font-size: 2.5rem;
             font-weight: 800;
             line-height: 1.15;
             color: #FFFFFF;
-            margin: 0 0 0.75rem 0;
+            margin: 0 0 0.5rem 0;
             letter-spacing: -0.02em;
         }
 
         .hero-subtitle {
-            font-size: 1.15rem;
+            font-size: 1.1rem;
             font-weight: 400;
             color: #F0FDFA;
-            margin: 0 0 1.5rem 0;
+            margin: 0;
             max-width: 720px;
             line-height: 1.5;
         }
@@ -226,17 +227,30 @@ def inject_custom_css():
     </style>
     """, unsafe_allow_html=True)
 
-def render_hero(on_primary_click=None):
+def render_hero(logo_path=None):
     """
-    Render main product hero section.
+    Render main product hero section with official NutriGuide AI logo.
     """
-    st.markdown("""
-    <div class="hero-banner">
-        <span class="hero-brand">NutriGuide AI</span>
-        <h1 class="hero-title">Personalized Nutrition, Powered by AI</h1>
-        <p class="hero-subtitle">Get diet suggestions tailored to your health profile, lifestyle, dietary restrictions and food preferences.</p>
-    </div>
-    """, unsafe_allow_html=True)
+    if logo_path and os.path.exists(logo_path):
+        col_logo, col_text = st.columns([1, 4])
+        with col_logo:
+            st.image(logo_path, use_column_width=True)
+        with col_text:
+            st.markdown("""
+            <div class="hero-banner">
+                <span class="hero-brand">NutriGuide AI</span>
+                <h1 class="hero-title">Personalized Nutrition, Powered by AI</h1>
+                <p class="hero-subtitle">Get diet suggestions tailored to your health profile, lifestyle, dietary restrictions and food preferences.</p>
+            </div>
+            """, unsafe_allow_html=True)
+    else:
+        st.markdown("""
+        <div class="hero-banner">
+            <span class="hero-brand">NutriGuide AI</span>
+            <h1 class="hero-title">Personalized Nutrition, Powered by AI</h1>
+            <p class="hero-subtitle">Get diet suggestions tailored to your health profile, lifestyle, dietary restrictions and food preferences.</p>
+        </div>
+        """, unsafe_allow_html=True)
 
 def render_benefit_cards():
     """

@@ -22,10 +22,14 @@ from src.ui import (
     render_footer
 )
 
+# Relative Asset Paths
+base_dir = os.path.dirname(os.path.abspath(__file__))
+logo_path = os.path.join(base_dir, 'assets', 'nutriguide_logo.png')
+
 # Page Setup
 st.set_page_config(
-    page_title="NutriGuide AI - Personalized Nutrition Guidance",
-    page_icon="🥗",
+    page_title="NutriGuide AI – Personalized Nutrition",
+    page_icon=logo_path if os.path.exists(logo_path) else "🥗",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -42,7 +46,6 @@ plt.rcParams['axes.edgecolor'] = '#E2E8F0'
 # -----------------------------------------------------------------------------
 @st.cache_data
 def load_app_data():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
     data_path = os.path.join(base_dir, 'data', 'diet_recommendations_dataset.csv')
     df_raw = load_dataset(data_path)
     df_clean = clean_dataset(df_raw)
@@ -51,7 +54,6 @@ def load_app_data():
 
 @st.cache_resource
 def load_model_artifacts():
-    base_dir = os.path.dirname(os.path.abspath(__file__))
     models_dir = os.path.join(base_dir, 'models')
     
     scaler = joblib.load(os.path.join(models_dir, 'scaler.pkl'))
@@ -80,9 +82,12 @@ if 'rec_result' not in st.session_state:
 # SIDEBAR NAVIGATION
 # -----------------------------------------------------------------------------
 with st.sidebar:
+    st.markdown("<div style='padding-top: 0.5rem;'></div>", unsafe_allow_html=True)
+    if os.path.exists(logo_path):
+        st.image(logo_path, width=70)
+        
     st.markdown("""
-    <div style="padding: 0.5rem 0 1rem 0;">
-        <span style="font-size: 2.25rem;">🥗</span>
+    <div style="padding: 0.2rem 0 0.8rem 0;">
         <h3 style="margin: 0.2rem 0 0 0; color: #0F172A; font-weight: 800; font-size: 1.35rem;">NutriGuide AI</h3>
         <p style="margin: 0; color: #64748B; font-size: 0.8rem; font-weight: 500;">Personalized Nutrition Platform</p>
     </div>
@@ -113,7 +118,7 @@ with st.sidebar:
 # PAGE 1: 🏠 HOME
 # -----------------------------------------------------------------------------
 if page_choice == "🏠 Home":
-    render_hero()
+    render_hero(logo_path=logo_path)
     
     # CTA Buttons
     col_cta1, col_cta2, col_space = st.columns([1.5, 1.5, 3])
